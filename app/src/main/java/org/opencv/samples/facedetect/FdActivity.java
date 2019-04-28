@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -25,6 +26,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.samples.utils.OpenCVUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,6 +38,9 @@ import pl.tajchert.nammu.PermissionCallback;
 import premar.tech.facerecognitionapp.R;
 
 public class FdActivity extends Activity implements CvCameraViewListener2 {
+
+    private ImageView ivSelectedImagePreview;
+    private Mat firstFoundFace;
 
     private static final String    TAG                 = "OCVSample::Activity";
     private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
@@ -142,6 +147,8 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             mOpenCvCameraView.setCameraIndex(1);
         }
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        ivSelectedImagePreview = findViewById(R.id.iv_selected_image_preview);
     }
 
     @Override
@@ -236,9 +243,27 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             Log.e(TAG, "Detection method is not selected!");
         }
 
+        firstFoundFace = null;
+
         Rect[] facesArray = faces.toArray();
-        for (int i = 0; i < facesArray.length; i++)
+        for (int i = 0; i < facesArray.length; i++) {
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
+            try {
+                firstFoundFace = new Mat(mRgba, facesArray[i]);//mRgba.submat(facesArray[i].x, facesArray[i].y, facesArray[i].width, facesArray[i].height);
+            } catch (Exception e) {}
+            if (firstFoundFace != null) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivSelectedImagePreview.setImageBitmap(OpenCVUtils.convertMatToBitMap(firstFoundFace));
+                    }
+                });
+                break;
+            }
+        }
+
+
 
         return mRgba;
     }
