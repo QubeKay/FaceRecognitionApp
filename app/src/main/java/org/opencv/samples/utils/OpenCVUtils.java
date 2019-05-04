@@ -12,6 +12,14 @@ public class OpenCVUtils {
 
     private static String TAG = "OpenCVUtils";
 
+    public static Mat convertBitMapToMat(Bitmap input){
+        Mat mat = new Mat();
+        Bitmap bmp32 = input.copy(Bitmap.Config.ARGB_8888, true);
+        Utils.bitmapToMat(bmp32, mat);
+
+        return mat;
+    }
+
     public static Bitmap convertMatToBitMap(Mat input){
         Bitmap bmp = null;
         Mat rgb = new Mat();

@@ -22,8 +22,14 @@ import android.widget.Toast;
 import org.opencv.samples.facedetect.FdActivity;
 
 import premar.tech.facerecognitionapp.R;
+import premar.tech.facerecognitionapp.api.APIClient;
+import premar.tech.facerecognitionapp.api.APIInterface;
+import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModel;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModelFactory;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -117,6 +123,23 @@ public class LoginActivity extends AppCompatActivity {
 //                loadingProgressBar.setVisibility(View.VISIBLE);
 //                loginViewModel.login(usernameEditText.getText().toString(),
 //                        passwordEditText.getText().toString());
+            }
+        });
+
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
+        Call<User> users = apiInterface.listUsers();
+        users.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                loadingProgressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                loadingProgressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(LoginActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

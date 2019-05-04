@@ -30,4 +30,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(path: ':opencv')
     implementation 'com.github.tajchert:nammu:1.2.0'
+    implementation ('com.squareup.retrofit2:retrofit:2.5.0') {
+        // exclude Retrofit’s OkHttp dependency module and define your own module import
+        exclude module: 'okhttp'
+    }
+    implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
 }

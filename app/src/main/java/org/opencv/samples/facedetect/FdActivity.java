@@ -43,7 +43,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
     private Mat firstFoundFace;
 
     private static final String    TAG                 = "OCVSample::Activity";
-    private static final Scalar    FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
+    private static final Scalar    FACE_RECT_COLOR     = new Scalar(150, 70, 164, 255); // RGBA
     public static final int        JAVA_DETECTOR       = 0;
     public static final int        NATIVE_DETECTOR     = 1;
 
@@ -59,7 +59,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
     private CascadeClassifier      mJavaDetector;
     private DetectionBasedTracker  mNativeDetector;
 
-    private int                    mDetectorType       = JAVA_DETECTOR;
+    private int                    mDetectorType       = NATIVE_DETECTOR;
     private String[]               mDetectorName;
 
     private float                  mRelativeFaceSize   = 0.2f;
@@ -219,7 +219,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             mNativeDetector.setMinFaceSize(mAbsoluteFaceSize);
         }
 
-        // these lines rotate the opencv image in the right direction for portrait mode using
+        // these lines of code rotate the opencv image in the right direction for portrait mode using
         // front facing camera
         Mat rotImage = Imgproc.getRotationMatrix2D(new Point(mRgba.cols() / 2,
                 mRgba.rows() / 2), 90, 1.0);
@@ -250,22 +250,25 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
             try {
                 firstFoundFace = new Mat(mRgba, facesArray[i]);//mRgba.submat(facesArray[i].x, facesArray[i].y, facesArray[i].width, facesArray[i].height);
-            } catch (Exception e) {}
-            if (firstFoundFace != null) {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ivSelectedImagePreview.setImageBitmap(OpenCVUtils.convertMatToBitMap(firstFoundFace));
-                    }
-                });
-                break;
-            }
+            } catch (Exception e) {}
         }
 
-
+        onFaceFound(firstFoundFace);
 
         return mRgba;
+    }
+
+    private void onFaceFound(final Mat firstFoundFace) {
+        if (firstFoundFace != null) {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ivSelectedImagePreview.setImageBitmap(OpenCVUtils.convertMatToBitMap(firstFoundFace));
+                }
+            });
+        }
     }
 
     @Override
