@@ -21,17 +21,21 @@ import android.widget.Toast;
 
 import org.opencv.samples.facedetect.FdActivity;
 
+import java.util.List;
+
 import premar.tech.facerecognitionapp.R;
 import premar.tech.facerecognitionapp.api.APIClient;
 import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModel;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModelFactory;
+import premar.tech.facerecognitionapp.utils.AppParentActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppParentActivity {
 
     private LoginViewModel loginViewModel;
 
@@ -119,25 +123,35 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 startActivity(new Intent(LoginActivity.this, FdActivity.class));
-
+//                teachPeople(loadingProgressBar);
 //                loadingProgressBar.setVisibility(View.VISIBLE);
 //                loginViewModel.login(usernameEditText.getText().toString(),
 //                        passwordEditText.getText().toString());
             }
         });
 
+
+
+    }
+
+    private void teachPeople(final ProgressBar loadingProgressBar) {
         loadingProgressBar.setVisibility(View.VISIBLE);
         APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<User> users = apiInterface.listUsers();
-        users.enqueue(new Callback<User>() {
+        Call<List<User>> users = apiInterface.listUsers();
+        users.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 loadingProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
+                List<User> users = response.body();
+                for (User user : users) {
+                    Toast.makeText(LoginActivity.this, user.name + " : : " + user.password, Toast.LENGTH_SHORT).show();
+                    Timber.d("USER -- " + user.name + " : : " + user.password);
+                }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 loadingProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(LoginActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }

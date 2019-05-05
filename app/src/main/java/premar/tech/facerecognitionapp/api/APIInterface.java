@@ -1,5 +1,9 @@
 package premar.tech.facerecognitionapp.api;
 
+import java.util.List;
+
+import premar.tech.facerecognitionapp.api.model.FacialLogin;
+import premar.tech.facerecognitionapp.api.model.ResponseMessage;
 import premar.tech.facerecognitionapp.api.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,14 +18,14 @@ public interface APIInterface {
 //    @GET("/api/unknown")
 //    Call<MultipleResource> doGetListResources();
 
-    @POST("/users")
-    Call<User> listUsers();
+    @GET("/facerecognition/users/")
+    Call<List<User>> listUsers();
 
-    @POST("/save_user")
+    @POST("/facerecognition/save_user/")
     Call<User> createUser(@Body User user);
 
-    @POST("/authenticate_user")
-    Call<User> authenticateUser(@Body User user);
+    @POST("/facerecognition/authenticate_user/")
+    Call<ResponseMessage> authenticateUser(@Body FacialLogin user);
 
 //    @GET("/api/users?")
 //    Call<UserList> doGetUserList(@Query("page") String page);

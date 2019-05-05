@@ -3,13 +3,17 @@ package org.opencv.samples.facedetect;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -28,14 +32,29 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.samples.utils.OpenCVUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
+import premar.tech.facerecognitionapp.BuildConfig;
 import premar.tech.facerecognitionapp.R;
+import premar.tech.facerecognitionapp.api.APIClient;
+import premar.tech.facerecognitionapp.api.APIInterface;
+import premar.tech.facerecognitionapp.api.model.FacialLogin;
+import premar.tech.facerecognitionapp.api.model.ResponseMessage;
+import premar.tech.facerecognitionapp.api.model.User;
+import premar.tech.facerecognitionapp.ui.login.LoginActivity;
+import premar.tech.facerecognitionapp.utils.UserDialogs;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class FdActivity extends Activity implements CvCameraViewListener2 {
 
@@ -138,6 +157,9 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
         Nammu.init(getApplicationContext());
 
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.fd_activity_surface_view);
@@ -262,13 +284,55 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
     private void onFaceFound(final Mat firstFoundFace) {
         if (firstFoundFace != null) {
 
+            final Bitmap faceImageBitmap = OpenCVUtils.convertMatToBitMap(firstFoundFace);
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ivSelectedImagePreview.setImageBitmap(OpenCVUtils.convertMatToBitMap(firstFoundFace));
+                    ivSelectedImagePreview.setImageBitmap(faceImageBitmap);
                 }
             });
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            faceImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String faceImageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            FacialLogin facialLogin = new FacialLogin();
+            facialLogin.username = "kay";
+            facialLogin.image = faceImageBase64;
+            teachPeople(facialLogin);
         }
+    }
+
+    boolean called = false;
+
+    private void teachPeople(FacialLogin facialLogin) {
+        if(called) {
+            return;
+        }
+        called = true;
+        final SweetAlertDialog dialog = UserDialogs.showProgressDialog(this, "Loading...");
+        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
+        Call<ResponseMessage> users = apiInterface.authenticateUser(facialLogin);
+        users.enqueue(new Callback<ResponseMessage>() {
+            @Override
+            public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
+                UserDialogs.hideProgressDialog(FdActivity.this);
+//                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
+                ResponseMessage responseMessage = response.body();
+                if (responseMessage.success) {
+                    Toast.makeText(FdActivity.this, "Message : : " + responseMessage.message, Toast.LENGTH_SHORT).show();
+                    Timber.d("RESPONSE MESSAGE : : " + responseMessage.message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMessage> call, Throwable t) {
+                UserDialogs.hideProgressDialog(FdActivity.this);
+                Toast.makeText(FdActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

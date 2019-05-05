@@ -17,7 +17,7 @@ public class APIClient {
 
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://178.128.35.109/facerecognition")
+                .baseUrl("http://178.128.35.109/")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .client(client)
                 .build();

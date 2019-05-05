@@ -2,7 +2,14 @@ package premar.tech.facerecognitionapp.api.model;
 
 public class User {
 
-    public Integer firstName;
+    public Integer id;
 
-    public Integer lastName;
+    public String name;
+
+    public String username;
+
+    public String password;
+
+    public String embeddings;
+
 }
