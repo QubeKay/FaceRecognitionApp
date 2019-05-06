@@ -296,7 +296,9 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             faceImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream .toByteArray();
-            String faceImageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            String faceImageBase64 = Base64.encodeToString(byteArray, Base64.NO_WRAP); // DEFAULT flag adds newline after every 76 xters, wasted my day!
+
+            faceImageBase64 = "data:image/png;base64," + faceImageBase64;
 
             FacialLogin facialLogin = new FacialLogin();
             facialLogin.username = "kay";
@@ -321,9 +323,11 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
                 UserDialogs.hideProgressDialog(FdActivity.this);
 //                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
                 ResponseMessage responseMessage = response.body();
-                if (responseMessage.success) {
+                if (responseMessage != null && responseMessage.success) {
                     Toast.makeText(FdActivity.this, "Message : : " + responseMessage.message, Toast.LENGTH_SHORT).show();
                     Timber.d("RESPONSE MESSAGE : : " + responseMessage.message);
+                } else {
+                    Toast.makeText(FdActivity.this, "Yeeeeaah! These are the kinda crashes your mama used to warn you about.", Toast.LENGTH_SHORT).show();
                 }
             }
 
