@@ -321,7 +321,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             @Override
             public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
                 UserDialogs.hideProgressDialog(FdActivity.this);
-//                Toast.makeText(LoginActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SignupActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
                 ResponseMessage responseMessage = response.body();
                 if (responseMessage != null && responseMessage.success) {
                     Toast.makeText(FdActivity.this, "Message : : " + responseMessage.message, Toast.LENGTH_SHORT).show();

@@ -1,15 +1,16 @@
 package premar.tech.facerecognitionapp.data;
 
-import premar.tech.facerecognitionapp.data.model.LoggedInUser;
-
 import java.io.IOException;
+
+import premar.tech.facerecognitionapp.data.model.LoggedInUser;
+import premar.tech.facerecognitionapp.data.model.RegisteredUser;
 
 /**
  * Class that handles authentication w/ signup credentials and retrieves user information.
  */
-public class LoginDataSource {
+public class SignupDataSource {
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<RegisteredUser> signup(String username, String password) {
 
         try {
             // TODO: handle loggedInUser authentication
@@ -23,7 +24,7 @@ public class LoginDataSource {
         }
     }
 
-    public void logout() {
+    public void unregister() {
         // TODO: revoke authentication
     }
 }

@@ -1,24 +1,24 @@
-package premar.tech.facerecognitionapp.ui.login;
+package premar.tech.facerecognitionapp.ui.signup;
 
 import android.support.annotation.Nullable;
 
 /**
  * Data validation state of the signup form.
  */
-class LoginFormState {
+class SignupFormState {
     @Nullable
     private Integer usernameError;
     @Nullable
     private Integer passwordError;
     private boolean isDataValid;
 
-    LoginFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
+    SignupFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
         this.usernameError = usernameError;
         this.passwordError = passwordError;
         this.isDataValid = false;
     }
 
-    LoginFormState(boolean isDataValid) {
+    SignupFormState(boolean isDataValid) {
         this.usernameError = null;
         this.passwordError = null;
         this.isDataValid = isDataValid;

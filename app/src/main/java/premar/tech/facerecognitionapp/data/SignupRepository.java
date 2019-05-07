@@ -1,29 +1,29 @@
 package premar.tech.facerecognitionapp.data;
 
-import premar.tech.facerecognitionapp.data.model.LoggedInUser;
+import premar.tech.facerecognitionapp.data.model.RegisteredUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of signup status and user credentials information.
  */
-public class LoginRepository {
+public class SignupRepository {
 
-    private static volatile LoginRepository instance;
+    private static volatile SignupRepository instance;
 
-    private LoginDataSource dataSource;
+    private SignupDataSource dataSource;
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private RegisteredUser user = null;
 
     // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
+    private SignupRepository(SignupDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
+    public static SignupRepository getInstance(SignupDataSource dataSource) {
         if (instance == null) {
-            instance = new LoginRepository(dataSource);
+            instance = new SignupRepository(dataSource);
         }
         return instance;
     }
@@ -34,20 +34,20 @@ public class LoginRepository {
 
     public void logout() {
         user = null;
-        dataSource.logout();
+        dataSource.unregister();
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
+    private void setRegisteredUser(RegisteredUser user) {
         this.user = user;
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<RegisteredUser> signup(String username, String password) {
         // handle signup
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        Result<RegisteredUser> result = dataSource.signup(username, password);
         if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+            setRegisteredUser(((Result.Success<RegisteredUser>) result).getData());
         }
         return result;
     }
