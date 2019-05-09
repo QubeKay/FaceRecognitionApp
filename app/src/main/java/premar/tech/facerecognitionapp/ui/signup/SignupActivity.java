@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import org.opencv.samples.facedetect.FdActivity;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import premar.tech.facerecognitionapp.R;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.utils.AppParentActivity;
@@ -27,10 +26,8 @@ import premar.tech.facerecognitionapp.utils.UserDialogs;
 
 public class SignupActivity extends AppParentActivity {
 
-    private static final int GET_FACE_REQUEST_CODE = 231;
     private SignupViewModel signupViewModel;
     private User user;
-    private SweetAlertDialog sweetAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,7 +146,6 @@ public class SignupActivity extends AppParentActivity {
         } else if (requestCode == GET_FACE_REQUEST_CODE) {
             Toast.makeText(this, "Could not pick face!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void forwardRequest(User user) {
@@ -164,14 +160,5 @@ public class SignupActivity extends AppParentActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (sweetAlertDialog != null) {
-            sweetAlertDialog.dismiss();
-            sweetAlertDialog = null;
-        }
     }
 }

@@ -26,11 +26,13 @@ import java.util.List;
 import premar.tech.facerecognitionapp.R;
 import premar.tech.facerecognitionapp.api.APIClient;
 import premar.tech.facerecognitionapp.api.APIInterface;
+import premar.tech.facerecognitionapp.api.model.FacialLogin;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModel;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModelFactory;
 import premar.tech.facerecognitionapp.ui.signup.SignupActivity;
 import premar.tech.facerecognitionapp.utils.AppParentActivity;
+import premar.tech.facerecognitionapp.utils.UserDialogs;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +41,7 @@ import timber.log.Timber;
 public class LoginActivity extends AppParentActivity {
 
     private LoginViewModel loginViewModel;
+    private FacialLogin authCredentials;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class LoginActivity extends AppParentActivity {
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final Button launchSignupButton = findViewById(R.id.login_launch_signup);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -74,7 +77,7 @@ public class LoginActivity extends AppParentActivity {
                 if (loginResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
+                sweetAlertDialog.hide();
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                 }
@@ -112,8 +115,13 @@ public class LoginActivity extends AppParentActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+
+                    startActivityForResult(new Intent(LoginActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+
+                    authCredentials = new FacialLogin();
+                    authCredentials.username = usernameEditText.getText().toString();
+//                user.password = passwordEditText.getText().toString();
+
                 }
                 return false;
             }
@@ -123,46 +131,45 @@ public class LoginActivity extends AppParentActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+                startActivityForResult(new Intent(LoginActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
 
-//                teachPeople(loadingProgressBar);
-
-//                loadingProgressBar.setVisibility(View.VISIBLE);
-//                loginViewModel.signup(usernameEditText.getText().toString(),
-//                        passwordEditText.getText().toString());
+                authCredentials = new FacialLogin();
+                authCredentials.username = usernameEditText.getText().toString();
+//                user.password = passwordEditText.getText().toString();
             }
         });
 
+        launchSignupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+            }
+        });
     }
 
-    private void teachPeople(final ProgressBar loadingProgressBar) {
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<List<User>> users = apiInterface.listUsers();
-        users.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-//                Toast.makeText(SignupActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
-                List<User> users = response.body();
-                for (User user : users) {
-                    Toast.makeText(LoginActivity.this, user.name + " : : " + user.password, Toast.LENGTH_SHORT).show();
-                    Timber.d("USER -- " + user.name + " : : " + user.password);
-                }
-            }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == GET_FACE_REQUEST_CODE && resultCode == RESULT_OK) {
+            String image = data.getStringExtra(FdActivity.DETECTED_FACE_KEY);
+            authCredentials.image = image;
 
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+
+            sweetAlertDialog = UserDialogs.getProgressDialog(this, "Loading...");
+            sweetAlertDialog.show();
+            forwardRequest(authCredentials);
+
+        } else if (requestCode == GET_FACE_REQUEST_CODE) {
+            Toast.makeText(this, "Could not pick face!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void forwardRequest(FacialLogin authCredentials) {
+        loginViewModel.login(authCredentials);
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        String welcome = model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }

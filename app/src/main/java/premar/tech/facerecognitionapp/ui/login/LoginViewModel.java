@@ -5,10 +5,16 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Patterns;
 
-import premar.tech.facerecognitionapp.data.LoginRepository;
-import premar.tech.facerecognitionapp.data.Result;
-import premar.tech.facerecognitionapp.data.model.LoggedInUser;
 import premar.tech.facerecognitionapp.R;
+import premar.tech.facerecognitionapp.api.APIClient;
+import premar.tech.facerecognitionapp.api.APIInterface;
+import premar.tech.facerecognitionapp.api.model.FacialLogin;
+import premar.tech.facerecognitionapp.api.model.ResponseMessage;
+import premar.tech.facerecognitionapp.data.LoginRepository;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class LoginViewModel extends ViewModel {
 
@@ -28,16 +34,39 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+    public void login(String username, String image) {
+        FacialLogin authCredentials = new FacialLogin();
+        authCredentials.username = username;
+        authCredentials.image = image;
+        login(authCredentials);
+    }
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+    public void login(FacialLogin authCredentials) {
+        // can be launched in a separate asynchronous job
+
+        sendLoginRequest(authCredentials);
+    }
+
+    private void sendLoginRequest(FacialLogin authCredentials) {
+        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
+        Call<ResponseMessage> signinAction = apiInterface.authenticateUser(authCredentials);
+        signinAction.enqueue(new Callback<ResponseMessage>() {
+            @Override
+            public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
+                ResponseMessage responseMessage = response.body();
+                if (responseMessage != null) {
+                    loginResult.setValue(new LoginResult(new LoggedInUserView(responseMessage.success, responseMessage.message)));
+                    Timber.d("RESPONSE MESSAGE : : " + responseMessage.message);
+                } else {
+                    loginResult.setValue(new LoginResult(R.string.signup_failed));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMessage> call, Throwable t) {
+                loginResult.setValue(new LoginResult(R.string.connection_error));
+            }
+        });
     }
 
     public void loginDataChanged(String username, String password) {

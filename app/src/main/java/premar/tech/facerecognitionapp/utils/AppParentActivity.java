@@ -5,11 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import premar.tech.facerecognitionapp.BuildConfig;
 import premar.tech.facerecognitionapp.R;
 import timber.log.Timber;
 
 public class AppParentActivity extends AppCompatActivity {
+
+
+    protected SweetAlertDialog sweetAlertDialog;
+    protected static final int GET_FACE_REQUEST_CODE = 231;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,15 @@ public class AppParentActivity extends AppCompatActivity {
                     CrashReporter.logWarning(t);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
         }
     }
 }
