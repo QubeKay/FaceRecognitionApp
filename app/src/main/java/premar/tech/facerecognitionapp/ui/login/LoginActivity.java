@@ -29,6 +29,7 @@ import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModel;
 import premar.tech.facerecognitionapp.ui.login.LoginViewModelFactory;
+import premar.tech.facerecognitionapp.ui.signup.SignupActivity;
 import premar.tech.facerecognitionapp.utils.AppParentActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -122,11 +123,13 @@ public class LoginActivity extends AppParentActivity {
             @Override
             public void onClick(View v) {
 
-//                startActivity(new Intent(SignupActivity.this, FdActivity.class));
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+
 //                teachPeople(loadingProgressBar);
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+
+//                loadingProgressBar.setVisibility(View.VISIBLE);
+//                loginViewModel.signup(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
             }
         });
 

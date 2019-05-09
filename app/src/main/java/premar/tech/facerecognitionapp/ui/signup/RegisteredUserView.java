@@ -1,17 +1,19 @@
 package premar.tech.facerecognitionapp.ui.signup;
 
 /**
- * Class exposing authenticated user details to the UI.
+ * Class exposing registered user details to the UI.
  */
 class RegisteredUserView {
-    private String displayName;
+    private String responseMessage;
+    private Boolean success;
     //... other data fields that may be accessible to the UI
 
-    RegisteredUserView(String displayName) {
-        this.displayName = displayName;
+    RegisteredUserView(Boolean success, String responseMessage) {
+        this.success = success;
+        this.responseMessage = responseMessage;
     }
 
-    String getDisplayName() {
-        return displayName;
+    String getResponseMessage() {
+        return responseMessage;
     }
 }

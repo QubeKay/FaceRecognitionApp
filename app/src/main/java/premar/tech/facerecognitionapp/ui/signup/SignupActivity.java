@@ -3,6 +3,7 @@ package premar.tech.facerecognitionapp.ui.signup;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -13,25 +14,23 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
+import org.opencv.samples.facedetect.FdActivity;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import premar.tech.facerecognitionapp.R;
-import premar.tech.facerecognitionapp.api.APIClient;
-import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.utils.AppParentActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
+import premar.tech.facerecognitionapp.utils.UserDialogs;
 
 public class SignupActivity extends AppParentActivity {
 
+    private static final int GET_FACE_REQUEST_CODE = 231;
     private SignupViewModel signupViewModel;
+    private User user;
+    private SweetAlertDialog sweetAlertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,10 +39,11 @@ public class SignupActivity extends AppParentActivity {
         signupViewModel = ViewModelProviders.of(this, new SignupViewModelFactory())
                 .get(SignupViewModel.class);
 
+        final EditText nameEditText = findViewById(R.id.name);
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final Button signupButton = findViewById(R.id.signup);
+//        final ProgressBar sweeAlertDialog = findViewById(R.id.loading);
 
         signupViewModel.getSignupFormState().observe(this, new Observer<SignupFormState>() {
             @Override
@@ -51,7 +51,10 @@ public class SignupActivity extends AppParentActivity {
                 if (signupFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(signupFormState.isDataValid());
+                signupButton.setEnabled(signupFormState.isDataValid());
+                if (signupFormState.getUsernameError() != null) {
+                    nameEditText.setError(getString(signupFormState.getUsernameError()));
+                }
                 if (signupFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(signupFormState.getUsernameError()));
                 }
@@ -67,7 +70,7 @@ public class SignupActivity extends AppParentActivity {
                 if (signupResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
+                sweetAlertDialog.hide();
                 if (signupResult.getError() != null) {
                     showLoginFailed(signupResult.getError());
                 }
@@ -94,7 +97,8 @@ public class SignupActivity extends AppParentActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                signupViewModel.signupDataChanged(usernameEditText.getText().toString(),
+                signupViewModel.signupDataChanged(nameEditText.getText().toString(),
+                        usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         };
@@ -105,60 +109,69 @@ public class SignupActivity extends AppParentActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    signupViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+
+                    startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+
+                    user = new User();
+                    user.username = usernameEditText.getText().toString();
+                    user.password = passwordEditText.getText().toString();
+                    user.name = nameEditText.getText().toString();
                 }
                 return false;
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                startActivity(new Intent(SignupActivity.this, FdActivity.class));
-//                teachPeople(loadingProgressBar);
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                signupViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+
+                user = new User();
+                user.username = usernameEditText.getText().toString();
+                user.password = passwordEditText.getText().toString();
+                user.name = nameEditText.getText().toString();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == GET_FACE_REQUEST_CODE && resultCode == RESULT_OK) {
+            String image = data.getStringExtra(FdActivity.DETECTED_FACE_KEY);
+            user.image = image;
 
 
+            sweetAlertDialog = UserDialogs.getProgressDialog(this, "Loading...");
+            sweetAlertDialog.show();
+            forwardRequest(user);
+
+        } else if (requestCode == GET_FACE_REQUEST_CODE) {
+            Toast.makeText(this, "Could not pick face!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
-    private void teachPeople(final ProgressBar loadingProgressBar) {
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<List<User>> users = apiInterface.listUsers();
-        users.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-//                Toast.makeText(SignupActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
-                List<User> users = response.body();
-                for (User user : users) {
-                    Toast.makeText(SignupActivity.this, user.name + " : : " + user.password, Toast.LENGTH_SHORT).show();
-                    Timber.d("USER -- " + user.name + " : : " + user.password);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(SignupActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void forwardRequest(User user) {
+        signupViewModel.signup(user);
     }
 
     private void updateUiWithUser(RegisteredUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        String welcome = model.getResponseMessage();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
     }
 }

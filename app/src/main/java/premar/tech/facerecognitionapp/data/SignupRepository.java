@@ -28,11 +28,11 @@ public class SignupRepository {
         return instance;
     }
 
-    public boolean isLoggedIn() {
+    public boolean isSignedUp() {
         return user != null;
     }
 
-    public void logout() {
+    public void unregister() {
         user = null;
         dataSource.unregister();
     }
@@ -45,6 +45,7 @@ public class SignupRepository {
 
     public Result<RegisteredUser> signup(String username, String password) {
         // handle signup
+
         Result<RegisteredUser> result = dataSource.signup(username, password);
         if (result instanceof Result.Success) {
             setRegisteredUser(((Result.Success<RegisteredUser>) result).getData());

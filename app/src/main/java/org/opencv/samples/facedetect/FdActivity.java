@@ -3,6 +3,7 @@ package org.opencv.samples.facedetect;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -10,10 +11,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -37,7 +36,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.tajchert.nammu.Nammu;
@@ -48,8 +46,6 @@ import premar.tech.facerecognitionapp.api.APIClient;
 import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.FacialLogin;
 import premar.tech.facerecognitionapp.api.model.ResponseMessage;
-import premar.tech.facerecognitionapp.api.model.User;
-import premar.tech.facerecognitionapp.ui.login.LoginActivity;
 import premar.tech.facerecognitionapp.utils.UserDialogs;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,6 +53,8 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class FdActivity extends Activity implements CvCameraViewListener2 {
+
+    public static String DETECTED_FACE_KEY = "detected_face";
 
     private ImageView ivSelectedImagePreview;
     private Mat firstFoundFace;
@@ -300,10 +298,17 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
 
             faceImageBase64 = "data:image/png;base64," + faceImageBase64;
 
+            Intent resultData = new Intent();
+            resultData.putExtra(DETECTED_FACE_KEY, faceImageBase64);
+            setResult(RESULT_OK, resultData);
+            finish();
+
+            /* TAKE ALL THIS TO LOGIN ACTIVITY
             FacialLogin facialLogin = new FacialLogin();
             facialLogin.username = "kay";
             facialLogin.image = faceImageBase64;
             teachPeople(facialLogin);
+            */
         }
     }
 

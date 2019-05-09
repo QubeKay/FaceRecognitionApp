@@ -22,7 +22,7 @@ public interface APIInterface {
     Call<List<User>> listUsers();
 
     @POST("/facerecognition/save_user/")
-    Call<User> createUser(@Body User user);
+    Call<ResponseMessage> createUser(@Body User user);
 
     @POST("/facerecognition/authenticate_user/")
     Call<ResponseMessage> authenticateUser(@Body FacialLogin user);

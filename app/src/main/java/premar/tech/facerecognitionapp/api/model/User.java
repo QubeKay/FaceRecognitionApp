@@ -10,6 +10,6 @@ public class User {
 
     public String password;
 
-    public String embeddings;
+    public String image;
 
 }

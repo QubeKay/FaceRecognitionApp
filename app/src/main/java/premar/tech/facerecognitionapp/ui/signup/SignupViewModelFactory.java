@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import premar.tech.facerecognitionapp.data.LoginDataSource;
 import premar.tech.facerecognitionapp.data.LoginRepository;
+import premar.tech.facerecognitionapp.data.SignupDataSource;
+import premar.tech.facerecognitionapp.data.SignupRepository;
 
 /**
  * ViewModel provider factory to instantiate SignupViewModel.
@@ -18,7 +20,7 @@ public class SignupViewModelFactory implements ViewModelProvider.Factory {
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(SignupViewModel.class)) {
-            return (T) new SignupViewModel(LoginRepository.getInstance(new LoginDataSource()));
+            return (T) new SignupViewModel(SignupRepository.getInstance(new SignupDataSource()));
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

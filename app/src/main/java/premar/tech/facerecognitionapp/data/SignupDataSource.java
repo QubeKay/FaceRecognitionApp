@@ -2,7 +2,6 @@ package premar.tech.facerecognitionapp.data;
 
 import java.io.IOException;
 
-import premar.tech.facerecognitionapp.data.model.LoggedInUser;
 import premar.tech.facerecognitionapp.data.model.RegisteredUser;
 
 /**
@@ -13,14 +12,17 @@ public class SignupDataSource {
     public Result<RegisteredUser> signup(String username, String password) {
 
         try {
+
+
             // TODO: handle loggedInUser authentication
-            LoggedInUser fakeUser =
-                    new LoggedInUser(
+            RegisteredUser signupResponse =
+                    new RegisteredUser(
                             java.util.UUID.randomUUID().toString(),
-                            "Jane Doe");
-            return new Result.Success<>(fakeUser);
+                            "Jane Dork");
+
+            return new Result.Success<>(signupResponse);
         } catch (Exception e) {
-            return new Result.Error(new IOException("Error logging in", e));
+            return new Result.Error(new IOException("Error signing up", e));
         }
     }
 

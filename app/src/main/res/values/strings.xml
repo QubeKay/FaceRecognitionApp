@@ -10,4 +10,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="action_sign_up">REGISTER</string>
+    <string name="connection_error">Could not connect! Probably a connectivity issue, check internet.</string>
+    <string name="signup_failed">Signup failed!</string>
+    <string name="prompt_name">First Name\tSecond Name</string>
+    <string name="invalid_name">For sure, is this your real name?</string>
 </resources>
