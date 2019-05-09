@@ -21,6 +21,7 @@ import org.opencv.samples.facedetect.FdActivity;
 
 import premar.tech.facerecognitionapp.R;
 import premar.tech.facerecognitionapp.api.model.User;
+import premar.tech.facerecognitionapp.data.StaticData;
 import premar.tech.facerecognitionapp.utils.AppParentActivity;
 import premar.tech.facerecognitionapp.utils.UserDialogs;
 
@@ -135,9 +136,8 @@ public class SignupActivity extends AppParentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == GET_FACE_REQUEST_CODE && resultCode == RESULT_OK) {
-            String image = data.getStringExtra(FdActivity.DETECTED_FACE_KEY);
-            user.image = image;
-
+//            String image = data.getStringExtra(FdActivity.DETECTED_FACE_KEY);
+            user.image = StaticData.base64ImageData;
 
             sweetAlertDialog = UserDialogs.getProgressDialog(this, "Loading...");
             sweetAlertDialog.show();

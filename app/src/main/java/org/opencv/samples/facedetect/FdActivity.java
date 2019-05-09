@@ -46,6 +46,7 @@ import premar.tech.facerecognitionapp.api.APIClient;
 import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.FacialLogin;
 import premar.tech.facerecognitionapp.api.model.ResponseMessage;
+import premar.tech.facerecognitionapp.data.StaticData;
 import premar.tech.facerecognitionapp.utils.UserDialogs;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -299,49 +300,11 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             faceImageBase64 = "data:image/png;base64," + faceImageBase64;
 
             Intent resultData = new Intent();
-            resultData.putExtra(DETECTED_FACE_KEY, faceImageBase64);
+//            resultData.putExtra(DETECTED_FACE_KEY, faceImageBase64);
+            StaticData.base64ImageData = faceImageBase64;
             setResult(RESULT_OK, resultData);
             finish();
-
-            /* TAKE ALL THIS TO LOGIN ACTIVITY
-            FacialLogin facialLogin = new FacialLogin();
-            facialLogin.username = "kay";
-            facialLogin.image = faceImageBase64;
-            teachPeople(facialLogin);
-            */
         }
-    }
-
-    boolean called = false;
-
-    private void teachPeople(FacialLogin facialLogin) {
-        if(called) {
-            return;
-        }
-        called = true;
-        final SweetAlertDialog dialog = UserDialogs.showProgressDialog(this, "Loading...");
-        APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<ResponseMessage> users = apiInterface.authenticateUser(facialLogin);
-        users.enqueue(new Callback<ResponseMessage>() {
-            @Override
-            public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
-                UserDialogs.hideProgressDialog(FdActivity.this);
-//                Toast.makeText(SignupActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
-                ResponseMessage responseMessage = response.body();
-                if (responseMessage != null && responseMessage.success) {
-                    Toast.makeText(FdActivity.this, "Message : : " + responseMessage.message, Toast.LENGTH_SHORT).show();
-                    Timber.d("RESPONSE MESSAGE : : " + responseMessage.message);
-                } else {
-                    Toast.makeText(FdActivity.this, "Yeeeeaah! These are the kinda crashes your mama used to warn you about.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseMessage> call, Throwable t) {
-                UserDialogs.hideProgressDialog(FdActivity.this);
-                Toast.makeText(FdActivity.this, "Failed miserably!\n"+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
