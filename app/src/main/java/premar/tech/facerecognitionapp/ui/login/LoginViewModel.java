@@ -10,6 +10,7 @@ import premar.tech.facerecognitionapp.api.APIClient;
 import premar.tech.facerecognitionapp.api.APIInterface;
 import premar.tech.facerecognitionapp.api.model.BaseLogin;
 import premar.tech.facerecognitionapp.api.model.FacialLogin;
+import premar.tech.facerecognitionapp.api.model.PasswordLogin;
 import premar.tech.facerecognitionapp.api.model.ResponseMessage;
 import premar.tech.facerecognitionapp.data.LoginRepository;
 import retrofit2.Call;
@@ -43,14 +44,20 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(BaseLogin authCredentials) {
-        // can be launched in a separate asynchronous job
+        // to be launched in a separate asynchronous job
 
         sendLoginRequest(authCredentials);
     }
 
     private void sendLoginRequest(BaseLogin authCredentials) {
         APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
-        Call<ResponseMessage> signinAction = apiInterface.authenticateUser(authCredentials);
+        Call<ResponseMessage> signinAction = null;
+        if (authCredentials instanceof FacialLogin) {
+            signinAction = apiInterface.authenticateUserFace((FacialLogin) authCredentials);
+        } else if (authCredentials instanceof PasswordLogin) {
+            signinAction = apiInterface.authenticateUserPassword((PasswordLogin) authCredentials);
+        }
+
         signinAction.enqueue(new Callback<ResponseMessage>() {
             @Override
             public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
