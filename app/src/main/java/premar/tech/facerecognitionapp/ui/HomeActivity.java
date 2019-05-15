@@ -2,13 +2,17 @@ package premar.tech.facerecognitionapp.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -110,6 +114,42 @@ public class HomeActivity extends AppParentActivity implements View.OnClickListe
         fetchArticles();
     }
 
+    private void addArticlesToView(List<Article> articles) {
+        LinearLayout llArticlesContainer = findViewById(R.id.ll_articles_container);
+        llArticlesContainer.removeAllViews();
+
+        TextView tvTitle, tvContent;
+        FancyButton fbReadMore;
+
+        for (Article article : articles) {
+            CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.article_card_view, llArticlesContainer);
+            tvTitle = cardView.findViewById(R.id.tv_title);
+            tvContent = cardView.findViewById(R.id.tv_article_summary);
+            fbReadMore = cardView.findViewById(R.id.fb_read_article);
+
+            tvTitle.setText(article.name);
+            tvContent.setText(article.summary);
+
+            addOnReadMoreClickListener(fbReadMore, article.link);
+
+
+            llArticlesContainer.addView(cardView);
+
+            Timber.d("RESPONSE MESSAGE : : " + article.summary);
+        }
+    }
+
+    private void addOnReadMoreClickListener(FancyButton fbReadMore, final String link) {
+        fbReadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(link));
+                startActivity(i);
+            }
+        });
+    }
+
     private void fetchArticles() {
         APIInterface apiInterface = APIClient.getClient().create(APIInterface.class);
         Call<List<Article>> articles = apiInterface.listArticles();
@@ -117,13 +157,9 @@ public class HomeActivity extends AppParentActivity implements View.OnClickListe
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
                 sweetAlertDialog.hide();
-                Toast.makeText(HomeActivity.this, "Success: Eureka! \n" + response.message(), Toast.LENGTH_SHORT).show();
 
                 List<Article> articles = response.body();
-
-                for (Article article : articles) {
-                    Timber.d("RESPONSE MESSAGE : : " + article.summary);
-                }
+                addArticlesToView(articles);
 
             }
 
