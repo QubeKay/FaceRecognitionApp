@@ -10,9 +10,22 @@
         android:layout_weight="1"
         android:id="@+id/fd_activity_surface_view" />
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_selected_image_preview"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_height="200dp" />
+
+        TODO: credit: Photo by Ben Sweet on Unsplash
+        150, 70, 164, 255-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_selected_image_preview"
         android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/profile"
         android:layout_gravity="center_horizontal"
-        android:layout_height="200dp" />
+        app:civ_border_width="2dp"
+        app:civ_border_color="#A850FF"/>
 </LinearLayout>

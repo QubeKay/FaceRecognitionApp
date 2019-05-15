@@ -16,4 +16,8 @@ class RegisteredUserView {
     String getResponseMessage() {
         return responseMessage;
     }
+
+    public Boolean getSuccess() {
+        return success;
+    }
 }

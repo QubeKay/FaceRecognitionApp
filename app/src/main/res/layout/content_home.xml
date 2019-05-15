@@ -6,12 +6,267 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.HomeActivity"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     tools:showIn="@layout/activity_home">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/horizontal_padding"
+        android:paddingVertical="@dimen/vertical_padding"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view_"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="10dp"
+            card_view:cardCornerRadius="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/horizontal_padding"
+                android:paddingVertical="@dimen/vertical_padding">
+
+                <TextView
+                    android:id="@+id/tv_in_the_beginning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/in_the_beginning"
+                    android:gravity="center_horizontal"
+                    android:textSize="@dimen/card_title_text_size"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_in_the_beginning_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_in_the_beginning"
+                    android:text="@string/placeholder_in_the_beginning"
+                    android:textSize="@dimen/card_text_size"
+                    android:lineSpacingExtra="@dimen/card_line_spacing"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="@dimen/desc_tv_padding_bottom"/>
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/fb_read_in_the_beginning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="@color/colorPrimary"
+                    fancy:fb_focusColor="#9bd823"
+                    fancy:fb_fontIconResource="&#xf178;"
+                    fancy:fb_iconPosition="right"
+                    fancy:fb_radius="30dp"
+                    android:layout_alignBottom="@+id/tv_in_the_beginning_desc"
+                    android:layout_alignRight="@+id/tv_in_the_beginning_desc"
+                    fancy:fb_text="@string/read_more"
+                    fancy:fb_textColor="#FFFFFF" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!--android:lineSpacingExtra="@dimen/card_line_spacing"-->
+        <!--android:textSize="@dimen/card_text_size"-->
+        <!--android:textSize="@dimen/card_title_text_size"-->
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="10dp"
+            card_view:cardCornerRadius="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/horizontal_padding"
+                android:paddingVertical="@dimen/vertical_padding">
+
+                <TextView
+                    android:id="@+id/tv_kujichocha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/kujichocha"
+                    android:gravity="center_horizontal"
+                    android:textSize="@dimen/card_title_text_size"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_kujichocha_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_kujichocha"
+                    android:text="@string/placeholder_kujichocha"
+                    android:textSize="@dimen/card_text_size"
+                    android:lineSpacingExtra="@dimen/card_line_spacing"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="@dimen/desc_tv_padding_bottom"/>
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/fb_read_kujichocha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="@color/colorPrimary"
+                    fancy:fb_focusColor="#9bd823"
+                    fancy:fb_fontIconResource="&#xf178;"
+                    fancy:fb_iconPosition="right"
+                    fancy:fb_radius="30dp"
+                    android:layout_alignBottom="@+id/tv_kujichocha_desc"
+                    android:layout_alignRight="@+id/tv_kujichocha_desc"
+                    fancy:fb_text="@string/read_more"
+                    fancy:fb_textColor="#FFFFFF" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view__"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="10dp"
+            card_view:cardCornerRadius="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/horizontal_padding"
+                android:paddingVertical="@dimen/vertical_padding">
+
+                <TextView
+                    android:id="@+id/tv_winning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/winning"
+                    android:gravity="center_horizontal"
+                    android:textSize="@dimen/card_title_text_size"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_winning_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_winning"
+                    android:text="@string/placeholder_text"
+                    android:textSize="@dimen/card_text_size"
+                    android:lineSpacingExtra="@dimen/card_line_spacing"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="@dimen/desc_tv_padding_bottom"/>
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/fb_read_winning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="@color/colorPrimary"
+                    fancy:fb_focusColor="#9bd823"
+                    fancy:fb_fontIconResource="&#xf178;"
+                    fancy:fb_iconPosition="right"
+                    fancy:fb_radius="30dp"
+                    android:layout_alignBottom="@+id/tv_winning_desc"
+                    android:layout_alignRight="@+id/tv_winning_desc"
+                    fancy:fb_text="@string/read_more"
+                    fancy:fb_textColor="#FFFFFF" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view___"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="10dp"
+            card_view:cardCornerRadius="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/horizontal_padding"
+                android:paddingVertical="@dimen/vertical_padding">
+
+                <TextView
+                    android:id="@+id/tv_and_beyond"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/and_beyond"
+                    android:gravity="center_horizontal"
+                    android:textSize="@dimen/card_title_text_size"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_and_beyond_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_and_beyond"
+                    android:text="@string/placeholder_text"
+                    android:textSize="@dimen/card_text_size"
+                    android:lineSpacingExtra="@dimen/card_line_spacing"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="@dimen/desc_tv_padding_bottom"/>
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/fb_read_and_beyond_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="@color/colorPrimary"
+                    fancy:fb_focusColor="#9bd823"
+                    fancy:fb_fontIconResource="&#xf178;"
+                    fancy:fb_iconPosition="right"
+                    fancy:fb_radius="30dp"
+                    android:layout_alignBottom="@+id/tv_and_beyond_desc"
+                    android:layout_alignRight="@+id/tv_and_beyond_desc"
+                    fancy:fb_text="@string/read_more"
+                    fancy:fb_textColor="#FFFFFF" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

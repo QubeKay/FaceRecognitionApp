@@ -3,4 +3,20 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimaryLighter">#33B8AA</color>
+    <!--<color name="colorPrimaryLight">#D4FFF9</color>-->
+    <color name="colorPrimaryLight">#E9FFFC</color>
+
+
+    <!--SRIM colours-->
+    <!--<color name="translucent_scrim_top">#26000000</color>-->
+    <!--<color name="translucent_scrim_top_center">#0C000000</color>-->
+    <!--<color name="translucent_scrim_bottom">#2A000000</color>-->
+    <!--<color name="translucent_scrim_bottom_center">#0D000000</color>-->
+
+
+    <color name="translucent_scrim_top">#000</color>
+    <color name="translucent_scrim_top_center">#000</color>
+    <color name="translucent_scrim_bottom">#000</color>
+    <color name="translucent_scrim_bottom_center">#000</color>
 </resources>

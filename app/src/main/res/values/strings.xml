@@ -13,8 +13,24 @@
     <string name="connection_error">Could not connect! Probably a connectivity issue, check internet.</string>
     <string name="signup_failed">Signup failed!</string>
     <string name="prompt_name">First Name\tSecond Name</string>
-    <string name="invalid_name">For sure, is this your real name?</string>
+    <string name="invalid_name">Surely, is this your full/real name?</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="placeholder_text">
+    "facial biometrics are a helpful tool for finance, law enforcement, "
+        "advertising and healthcare, as well as a solution to hacking and identity theft."
+
+    "Bold, graphic, intentional.\n\n"
+
+    "The foundational elements of print based design typography, grids, space, scale, color, "
+    "and use of imagery guide visual treatments. These elements do far more than please the "
+    "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
+    "imagery, large scale typography, and intentional white space create a bold and graphic "
+    "interface that immerse the user in the experience.\n"
+    "An emphasis on user actions makes core functionality immediately apparent and provides "
+    "waypoints for the user.\n\n"
+
+    "Motion provides meaning.\n\n"
+    </string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -106,4 +122,23 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="facial_auth">Facial Authentication</string>
+    <string name="in_the_beginning">In the beginning...</string>
+    <string name="and_beyond">...And Beyond!</string>
+    <string name="winning">...Winning...</string>
+    <string name="kujichocha">...Kujichocha...</string>
+    <string name="placeholder_in_the_beginning">On 18th March, 2019, a senior colleague invited all
+        coders in our organization to contribute to an ongoing internal research centered on
+        machine vision technologies. The stated goal of the research was to create a demo app that
+        grants access to a secure resource, e.g. a protected homepage, based on facial recognition.
+        Further, the app needed to be able to initially register a face, subsequently use the face
+        to authenticate a user, and it should not be tricked by using a photograph.</string>
+    <string name="placeholder_kujichocha">Getting the back-end up and running was probably where
+        most of the time was spent in my journey to create this face recognition app.
+        Most of the technologies I had to work with were either completely new to me or I lacked
+        substantial experience in them. Flask used to be a thermos, Python was a snake,
+        and Docker(s) were some cool shoes my dad never bought me in high school.
+        But over the course of two months all that changed, and now I cannot imagine life without
+        Python, Docker, and TensorFlow Serving.
+</string>
+    <string name="read_more">Read More...</string>
 </resources>

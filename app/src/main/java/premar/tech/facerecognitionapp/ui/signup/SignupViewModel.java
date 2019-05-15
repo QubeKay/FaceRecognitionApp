@@ -66,12 +66,12 @@ public class SignupViewModel extends ViewModel {
     }
 
     public void signupDataChanged(String name, String username, String password) {
-        if (!isUserNameValid(username)) {
+        if (!isNameValid(name)) {
+            signupFormState.setValue(new SignupFormState(R.string.invalid_name, null, null));
+        } else if (!isUserNameValid(username)) {
             signupFormState.setValue(new SignupFormState(null, R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
             signupFormState.setValue(new SignupFormState(null, null, R.string.invalid_password));
-        } else if (!isNameValid(name)) {
-            signupFormState.setValue(new SignupFormState(R.string.invalid_name, null, null));
         } else {
             signupFormState.setValue(new SignupFormState(true));
         }
@@ -99,6 +99,6 @@ public class SignupViewModel extends ViewModel {
         if (!name.contains(" ")) {
             return false;
         }
-        return name != null && name.trim().length() < 5;
+        return name != null && name.trim().length() > 5;
     }
 }

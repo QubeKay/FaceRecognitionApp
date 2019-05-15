@@ -66,7 +66,7 @@ public class LoginViewModel extends ViewModel {
                     loginResult.setValue(new LoginResult(new LoggedInUserView(responseMessage.success, responseMessage.message)));
                     Timber.d("RESPONSE MESSAGE : : " + responseMessage.message);
                 } else {
-                    loginResult.setValue(new LoginResult(R.string.signup_failed));
+                    loginResult.setValue(new LoginResult(R.string.login_failed));
                 }
             }
 

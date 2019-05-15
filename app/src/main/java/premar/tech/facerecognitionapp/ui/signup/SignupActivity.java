@@ -12,13 +12,14 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.samples.facedetect.FdActivity;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import premar.tech.facerecognitionapp.R;
 import premar.tech.facerecognitionapp.api.model.User;
 import premar.tech.facerecognitionapp.data.StaticData;
@@ -28,7 +29,10 @@ import premar.tech.facerecognitionapp.utils.UserDialogs;
 public class SignupActivity extends AppParentActivity {
 
     private SignupViewModel signupViewModel;
-    private User user;
+    private final User user = new User();
+    private EditText usernameEditText;
+    private ImageView ivSelectedImagePreview;
+    private FancyButton signupImagePreviewButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,11 +41,13 @@ public class SignupActivity extends AppParentActivity {
         signupViewModel = ViewModelProviders.of(this, new SignupViewModelFactory())
                 .get(SignupViewModel.class);
 
+
         final EditText nameEditText = findViewById(R.id.name);
-        final EditText usernameEditText = findViewById(R.id.username);
+        usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button signupButton = findViewById(R.id.signup);
-//        final ProgressBar sweeAlertDialog = findViewById(R.id.loading);
+        final FancyButton signupButton = findViewById(R.id.signup);
+        signupImagePreviewButton = findViewById(R.id.fb_signup_image_preview);
+        ivSelectedImagePreview = findViewById(R.id.iv_signup_image_preview);
 
         signupViewModel.getSignupFormState().observe(this, new Observer<SignupFormState>() {
             @Override
@@ -50,8 +56,8 @@ public class SignupActivity extends AppParentActivity {
                     return;
                 }
                 signupButton.setEnabled(signupFormState.isDataValid());
-                if (signupFormState.getUsernameError() != null) {
-                    nameEditText.setError(getString(signupFormState.getUsernameError()));
+                if (signupFormState.getNameError() != null) {
+                    nameEditText.setError(getString(signupFormState.getNameError()));
                 }
                 if (signupFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(signupFormState.getUsernameError()));
@@ -75,10 +81,6 @@ public class SignupActivity extends AppParentActivity {
                 if (signupResult.getSuccess() != null) {
                     updateUiWithUser(signupResult.getSuccess());
                 }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy signup activity once successful
-                finish();
             }
         });
 
@@ -100,6 +102,7 @@ public class SignupActivity extends AppParentActivity {
                         passwordEditText.getText().toString());
             }
         };
+        nameEditText.addTextChangedListener(afterTextChangedListener);
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -108,9 +111,6 @@ public class SignupActivity extends AppParentActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                    startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
-
-                    user = new User();
                     user.username = usernameEditText.getText().toString();
                     user.password = passwordEditText.getText().toString();
                     user.name = nameEditText.getText().toString();
@@ -119,16 +119,25 @@ public class SignupActivity extends AppParentActivity {
             }
         });
 
+        ivSelectedImagePreview.setOnClickListener(imagePreviewClickListener);
+        signupImagePreviewButton.setOnClickListener(imagePreviewClickListener);
+
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+                if (user.image == null || user.image.isEmpty()) { // first get image
+                    startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+                    return;
+                }
 
-                user = new User();
                 user.username = usernameEditText.getText().toString();
                 user.password = passwordEditText.getText().toString();
                 user.name = nameEditText.getText().toString();
+
+                sweetAlertDialog = UserDialogs.getProgressDialog(SignupActivity.this, "Loading...");
+                sweetAlertDialog.show();
+                forwardRequest(user);
             }
         });
     }
@@ -138,13 +147,27 @@ public class SignupActivity extends AppParentActivity {
         if (requestCode == GET_FACE_REQUEST_CODE && resultCode == RESULT_OK) {
 //            String image = data.getStringExtra(FdActivity.DETECTED_FACE_KEY);
             user.image = StaticData.base64ImageData;
-
-            sweetAlertDialog = UserDialogs.getProgressDialog(this, "Loading...");
-            sweetAlertDialog.show();
-            forwardRequest(user);
-
+            ivSelectedImagePreview.setImageBitmap(StaticData.bitmapImageData);
+            signupImagePreviewButton.setEnabled(true);
         } else if (requestCode == GET_FACE_REQUEST_CODE) {
+            signupImagePreviewButton.setEnabled(true);
             Toast.makeText(this, "Could not pick face!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private View.OnClickListener imagePreviewClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if ((user.image == null || user.image.isEmpty()) && !signupImagePreviewButton.isEnabled()) {
+            // first get image before showing UI, reduces number of clicks to registration
+            startActivityForResult(new Intent(SignupActivity.this, FdActivity.class), GET_FACE_REQUEST_CODE);
         }
     }
 
@@ -154,8 +177,17 @@ public class SignupActivity extends AppParentActivity {
 
     private void updateUiWithUser(RegisteredUserView model) {
         String welcome = model.getResponseMessage();
-        // TODO : initiate successful logged in experience
+
+        // initiate successful sign up experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        if (model.getSuccess()) {
+
+            Intent data = new Intent();
+            data.putExtra(StaticData.LOGGED_IN_USERNAME, usernameEditText.getText().toString());
+            setResult(Activity.RESULT_OK, data);
+            //Complete and destroy signup activity once successful
+            finish();
+        }
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

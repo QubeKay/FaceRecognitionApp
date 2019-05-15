@@ -37,20 +37,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.tajchert.nammu.Nammu;
 import pl.tajchert.nammu.PermissionCallback;
 import premar.tech.facerecognitionapp.BuildConfig;
 import premar.tech.facerecognitionapp.R;
-import premar.tech.facerecognitionapp.api.APIClient;
-import premar.tech.facerecognitionapp.api.APIInterface;
-import premar.tech.facerecognitionapp.api.model.FacialLogin;
-import premar.tech.facerecognitionapp.api.model.ResponseMessage;
 import premar.tech.facerecognitionapp.data.StaticData;
-import premar.tech.facerecognitionapp.utils.UserDialogs;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class FdActivity extends Activity implements CvCameraViewListener2 {
@@ -302,6 +293,7 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
             Intent resultData = new Intent();
 //            resultData.putExtra(DETECTED_FACE_KEY, faceImageBase64);
             StaticData.base64ImageData = faceImageBase64;
+            StaticData.bitmapImageData = faceImageBitmap;
             setResult(RESULT_OK, resultData);
             finish();
         }
