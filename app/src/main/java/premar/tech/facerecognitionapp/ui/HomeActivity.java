@@ -122,7 +122,7 @@ public class HomeActivity extends AppParentActivity implements View.OnClickListe
         FancyButton fbReadMore;
 
         for (Article article : articles) {
-            CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.article_card_view, llArticlesContainer);
+            CardView cardView = (CardView) getLayoutInflater().inflate(R.layout.article_card_view, null);
             tvTitle = cardView.findViewById(R.id.tv_title);
             tvContent = cardView.findViewById(R.id.tv_article_summary);
             fbReadMore = cardView.findViewById(R.id.fb_read_article);
