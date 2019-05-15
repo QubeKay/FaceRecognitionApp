@@ -242,7 +242,7 @@
                     android:paddingBottom="@dimen/desc_tv_padding_bottom"/>
 
                 <mehdi.sakout.fancybuttons.FancyButton
-                    android:id="@+id/fb_read_and_beyond_desc"
+                    android:id="@+id/fb_read_and_beyond"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"

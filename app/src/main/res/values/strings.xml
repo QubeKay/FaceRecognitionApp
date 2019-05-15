@@ -141,4 +141,10 @@
         Python, Docker, and TensorFlow Serving.
 </string>
     <string name="read_more">Read More...</string>
+    <string name="intro">I chronicled the journey of creating this app and its back-end.
+        Below are a few articles which should, hopefully, guide you if you want to build
+        something similar or extend this project.</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_share">Share</string>
+    <string name="action_random">See Random Secret</string>
 </resources>

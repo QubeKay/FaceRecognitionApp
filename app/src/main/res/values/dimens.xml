@@ -11,7 +11,8 @@
     <dimen name="vertical_padding">5dp</dimen>
     <dimen name="card_title_text_size">24sp</dimen>
     <dimen name="card_text_size">18sp</dimen>
-    <dimen name="card_line_spacing">10sp</dimen>
-    <dimen name="card_height">250dp</dimen>
-    <dimen name="desc_tv_padding_bottom">40dp</dimen>
+    <dimen name="card_line_spacing">8sp</dimen>
+    <dimen name="card_height">300dp</dimen>
+    <dimen name="desc_tv_padding_bottom">50dp</dimen>
+    <dimen name="card_width">300dp</dimen>
 </resources>

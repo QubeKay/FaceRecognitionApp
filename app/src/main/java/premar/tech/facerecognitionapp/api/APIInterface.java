@@ -2,6 +2,7 @@ package premar.tech.facerecognitionapp.api;
 
 import java.util.List;
 
+import premar.tech.facerecognitionapp.api.model.Article;
 import premar.tech.facerecognitionapp.api.model.FacialLogin;
 import premar.tech.facerecognitionapp.api.model.PasswordLogin;
 import premar.tech.facerecognitionapp.api.model.ResponseMessage;
@@ -27,6 +28,9 @@ public interface APIInterface {
 
     @POST("/facerecognition/authenticate_user/")
     Call<ResponseMessage> authenticateUserPassword(@Body PasswordLogin user);
+
+    @GET("/facerecognition/articles/")
+    Call<List<Article>> listArticles();
 
 //    @GET("/api/users?")
 //    Call<UserList> doGetUserList(@Query("page") String page);
